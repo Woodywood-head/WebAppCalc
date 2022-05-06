@@ -1,0 +1,146 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Sign In Page</title>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="Style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap"
+          rel="stylesheet" />
+</head>
+
+<body>
+    <div class="pageWrapper">
+        <header>
+            <h1 class="pageTitle">Sign In Page</h1>
+
+            <nav class="navigation">
+                <span class="navigationItem navigationItem--selected">Sign In</span>
+
+                <a class="navigationItem" onclick="CalcSignIn()"> Calculator </a>
+                <a class="navigationItem" onclick="CalePage()">Calendar</a>
+                <a class="navigationItem" onclick="HoliPage()">Holidays</a>
+                <script>
+            const CalcSignIn = () => {
+              if (localStorage["username"]) {
+                window.location = "CalculatorPage.Html";
+              } else {
+                alert("Please Create A User Log In");
+              }
+            };
+
+            const CalePage = () => {
+              if (localStorage["username"]) {
+                window.location = "CalendarPage.Html";
+              } else {
+                alert("Please Create A User Log In");
+              }
+            };
+            const HoliPage = () => {
+              if (localStorage["username"]) {
+                window.location = "HolidaysPage.Html";
+              } else {
+                alert("Please Create A User Log In");
+              }
+            };
+                </script>
+            </nav>
+        </header>
+        <form name="login"
+              class="loginForm"
+              id="login"
+              onsubmit="formSubmit(event)">
+            <label class="Loginusername" for="username">Username</label>
+            <input class="loginInput"
+                   type="text"
+                   id="username"
+                   name="username"
+                   autocomplete="off"
+                   size="40"
+                   placeholder="Username"
+                   required />
+            <label class="Loginpassword" for="password">Password</label>
+            <input class="loginInput"
+                   type="password"
+                   name="password"
+                   id="password"
+                   autocomplete="off"
+                   size="40"
+                   placeholder="Password"
+                   required />
+        </form>
+
+        <div class="btnHome">
+            <button class="btnCreate" onclick="storeUser()">Create</button>
+            <button class="btnLogin" onclick="moveOn()">Log In</button>
+            <button class="btnSignOut" onclick="SignOut()">Log Out</button>
+        </div>
+        <h3 id="last"></h3>
+        <p id="result"></p>
+        <h3 id="next"></h3>
+
+        <script>
+        const formSubmit = (event) => {
+          event.preventDefault();
+        };
+
+        const storeUser = () => {
+          document.getElementById("next").innerHTML = "";
+          const user = document.forms["login"]["username"].value;
+          const passWord = document.forms["login"]["password"].value;
+
+          if (user.length < 6) {
+            // conditional error
+            alert("Your Username Must Be At Least 6 Characters Long");
+          } else if (passWord.length < 6) {
+            alert("Your Password Must Be At Least 6 Characters Long");
+          } else {
+            // Check browser support
+            alert("Username & Password Stored, You Can Now Log In");
+            if (typeof Storage !== "undefined") {
+              // Store
+              localStorage.setItem("username", user);
+              localStorage.setItem("password", passWord);
+              document.getElementById("result").innerHTML = "";
+            } else {
+              alert("Not allowed to store on this browser");
+            }
+          }
+        };
+
+        const moveOn = () => {
+          document.getElementById("result").innerHTML = "";
+          const user = document.forms["login"]["username"].value;
+          const passWord = document.forms["login"]["password"].value;
+          storeName = localStorage.getItem("username");
+          storePass = localStorage.getItem("password");
+
+          if (user == "admin123" && passWord == "123456") {
+            window.location = "CalculatorPage.html";
+          } else if (user === storeName && passWord === storePass) {
+            window.location = "CalculatorPage.html";
+          } else {
+            document.getElementById("last").innerHTML = "";
+            alert("Password or Username not recognised");
+          }
+        };
+        const SignOut = () => {
+          localStorage.removeItem("username");
+          localStorage.removeItem("password");
+        };
+        </script>
+    </div>
+    <footer>
+        <a onclick="openwindow()">
+            <img class="logo" src="Logo.png" alt="logo" />
+        </a>
+        <script>
+        const openwindow = () => {
+          window.open("https://www.west-lothian.ac.uk/");
+        };
+        </script>
+    </footer>
+</body>
+</html>
