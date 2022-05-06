@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Calculator</title>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="Style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <div class="pageWrapper">
+      <header>
+        <h1 class="pageTitle">Calculator Page</h1>
+
+        <nav class="navigation">
+          <a class="navigationItem" href="index.html">Sign Out</a>
+          <span class="navigationItem navigationItem--selected">Calculator</span>
+          <a class="navigationItem" href="CalendarPage.html">Calendar</a>
+          <a class="navigationItem" href="HolidaysPage.html">Holidays</a>
+        </nav>
+      </header>
+      <form class="Calculator" name="dataform" onsubmit="formSubmit(event)">
+        Enter Your Rate Of Pay
+        <input
+          class="CalcForm"
+          type="text"
+          name="payRate"
+          placeholder="£0.00 pounds per hour"
+          autocomplete="off"
+          size="40"
+        />
+        Number Of Hours Worked This Week
+        <input
+          class="CalcForm"
+          type="text"
+          name="weeklyHours"
+          placeholder="Weekly Hours Worked"
+          autocomplete="off"
+          size="40"
+        />
+
+        <div class="btnCalc">
+          <button class="button2" onclick="storeInput()">Submit</button>
+          <button class="button2" onclick="calcPay()">Calculate Pay</button>
+          <button class="button2" onclick="clearStorage()">CLEAR ALL</button>
+        </div>
+      </form>
+      <script>
+        const formSubmit = (event) => {
+          event.preventDefault();
+        };
+
+        const storeInput = () => {
+          document.getElementById("result").innerHTML = "";
+          var pay = document.forms["dataform"]["payRate"].value;
+          var hours = document.forms["dataform"]["weeklyHours"].value;
+          var savedHours = JSON.parse(localStorage.getItem("totalHours"));
+          var totalHours = hours * 1 + savedHours * 1;
+
+          if (typeof Storage !== "undefined") {
+            if (pay !== "") {
+              localStorage.setItem("payRate", pay);
+              alert("You Changed The Rate Of Pay To £" + pay);
+            }
+            if (hours !== "") {
+              document.getElementById("next").innerHTML = "not null";
+              localStorage.setItem("weeklyHours", hours);
+              localStorage.setItem("totalHours", totalHours);
+              document.getElementById("next").innerHTML = "";
+              alert("You have Worked " + totalHours + " Hours This Week");
+            }
+          } else {
+            alert("Not allowed to add to storage");
+          }
+          document.forms["dataform"]["payRate"].value = "";
+          document.forms["dataform"]["weeklyHours"].value = "";
+        };
+        function calcPay() {
+          document.getElementById("result").innerHTML = "";
+          var savedPay = localStorage.getItem("payRate");
+          var totalHours = localStorage.getItem("totalHours");
+          var yearTotalPay;
+          var taxCalc = 0;
+          var monthTax;
+          var weeklyPay;
+          weeklyPay = savedPay * totalHours;
+          yearTotalPay = weeklyPay * 52;
+          localStorage.setItem("yearTotalPay", yearTotalPay);
+
+          if (savedPay !== null && totalHours !== null) {
+            if (yearTotalPay >= 12571 && yearTotalPay <= 50270) {
+              taxCalc = (yearTotalPay - 12570) * 0.2;
+              localStorage.setItem("taxCalc", taxCalc);
+            } else if (yearTotalPay > 50270) {
+              //taxfourty = (yearTotalPay-50270)*0.4;
+              //taxTwenty = (37700)*0.2;
+              taxCalc = (yearTotalPay - 50270) * 0.4 + 37700 * 0.2;
+              localStorage.setItem("taxCalc", taxCalc);
+            }
+            monthTax = (yearTotalPay - taxCalc) / 12;
+            document.getElementById("outTax").innerHTML =
+              "You'll Pay £" + taxCalc.toFixed(2) + " In Tax This Year.";
+            document.getElementById("outText").innerHTML =
+              "Your Monthly Pay Will Be £" + monthTax.toFixed(2);
+            document.getElementById("outYear").innerHTML =
+              "Your 'Before Tax' Total This Year Will Be £" +
+              yearTotalPay.toFixed(2);
+          }
+        }
+        const clearStorage = () => {
+          document.getElementById("next").innerHTML = "";
+
+          var zero = 0;
+          localStorage.setItem("payRate", zero);
+          localStorage.setItem("totalHours", zero);
+          localStorage.setItem("weeklyHours", zero);
+          localStorage.setItem("taxCalc", zero);
+          localStorage.setItem("yearTotoalPay", zero);
+          document.getElementById("outText").innerHTML = "";
+          document.getElementById("outTax").innerHTML = "";
+          document.getElementById("outYear").innerHTML = "";
+        };
+      </script>
+      <p class="outTitle">Your Pay</p>
+
+      <div class="outText">
+        <p id="outTax"></p>
+        <p id="outText">
+          Input Your Rate Of Pay. <br />Update Your Hours Daily,<br />
+          Or Input the Total hours Worked.
+          <br />
+          We Will Do The Rest
+        </p>
+        <p id="outYear"></p>
+      </div>
+      <br />
+      <h3 id="result"></h3>
+      <h3 id="next"></h3>
+    </div>
+    <footer>
+      <a onclick="openwindow()">
+        <img class="logo" src="Logo.png" alt="logo"
+      /></a>
+      <script>
+        const openwindow = () => {
+          window.open("https://www.west-lothian.ac.uk/");
+        };
+      </script>
+    </footer>
+  </body>
+</html>

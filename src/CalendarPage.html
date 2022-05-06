@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Calendar</title>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="Style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <div class="pageWrapper">
+      <header>
+        <h1 class="pageTitle">Calendar Page</h1>
+
+        <nav class="navigation">
+          <a class="navigationItem" href="index.html">Sign Out</a>
+
+          <a class="navigationItem" href="CalculatorPage.html">Calculator</a>
+          <span class="navigationItem navigationItem--selected">Calendar</span>
+          <a class="navigationItem" href="HolidaysPage.html">Holidays</a>
+        </nav>
+      </header>
+      <div class="container">
+        <div class="calendar">
+          <div class="month">
+            <i class="fas fa-angle-left prev"></i>
+            <div class="date" id="date">
+              <h1></h1>
+              <p></p>
+            </div>
+            <i class="fas fa-angle-right next"></i>
+          </div>
+          <div class="weekdays">
+            <div>Sun</div>
+            <div>Mon</div>
+            <div>Tue</div>
+            <div>Wed</div>
+            <div>Thu</div>
+            <div>Fri</div>
+            <div>Sat</div>
+          </div>
+          <div class="days">
+            <div class="next-days"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- With some assistance from different sources online i was able to find some script to produce a calendar -->
+
+      <script>
+        const date = new Date();
+
+        const renderCalendar = () => {
+          date.setDate(1);
+
+          const monthDays = document.querySelector(".days");
+
+          const lastDay = new Date(
+            date.getFullYear(),
+            date.getMonth() + 1,
+            0
+          ).getDate();
+
+          const prevLastDay = new Date(
+            date.getFullYear(),
+            date.getMonth(),
+            0
+          ).getDate();
+
+          const firstDayIndex = date.getDay();
+
+          const lastDayIndex = new Date(
+            date.getFullYear(),
+            date.getMonth()
+          ).getDay();
+
+          const nextDays = 12 - lastDayIndex + 6;
+
+          const months = [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December",
+          ];
+
+          document.querySelector(".date h1").innerHTML =
+            months[date.getMonth()];
+
+          document.querySelector(".date p").innerHTML =
+            new Date().toDateString();
+
+          let days = "";
+
+          for (let x = firstDayIndex; x > 0; x--) {
+            days += `<div class="prev-date">${prevLastDay - x + 1}</div>`;
+          }
+
+          for (let i = 1; i <= lastDay; i++) {
+            if (
+              i === new Date().getDate() &&
+              date.getMonth() === new Date().getMonth()
+            ) {
+              days += `<div class="today">${i}</div>`;
+            } else {
+              days += `<div>${i}</div>`;
+            }
+            monthDays.innerHTML = days;
+          }
+
+          for (let j = 1; j <= nextDays; j++) {
+            if (nextDays > 0) {
+              for (let j = 1; j <= nextDays; j++) {
+                days += `<div class="next-date">${j}</div>`;
+                monthDays.innerHTML = days;
+              }
+            } else {
+              monthDays.innerHTML = days;
+            }
+          }
+        };
+
+        document.querySelector(".prev").addEventListener("click", () => {
+          date.setMonth(date.getMonth() - 1);
+          renderCalendar();
+        });
+
+        document.querySelector(".next").addEventListener("click", () => {
+          date.setMonth(date.getMonth() + 1);
+          renderCalendar();
+        });
+
+        renderCalendar();
+      </script>
+    </div>
+    <footer>
+      <a onclick="openwindow()">
+        <img class="logo" src="Logo.png" alt="logo"
+      /></a>
+      <script>
+        const openwindow = () => {
+          window.open("https://www.west-lothian.ac.uk/");
+        };
+      </script>
+    </footer>
+  </body>
+</html>

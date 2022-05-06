@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Holidays</title>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="Style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <div class="pageWrapper">
+      <header>
+        <h1 class="pageTitle">Holidays Page</h1>
+
+        <nav class="navigation">
+          <a class="navigationItem" href="index.html">Sign Out</a>
+
+          <a class="navigationItem" href="CalculatorPage.html">Calculator</a>
+          <a class="navigationItem" href="CalendarPage.html">Calendar</a>
+          <span class="navigationItem navigationItem--selected">Holidays</span>
+        </nav>
+      </header>
+
+      <form class="notesForm" name="dataForm" onsubmit="formSubmit(event)">
+        <label class="formLabel" for="noteNames">Title</label>
+        <input
+          class="formInput"
+          type="text"
+          id="noteNames"
+          name="noteNames"
+          placeholder="Easter Break"
+          maxlength="16"
+        />
+
+        <label class="formLabel" for="noteText"> Keep Track Of Holiday </label>
+        <textarea
+          class="formInput"
+          type="text"
+          id="noteText"
+          name="noteText"
+          rows="7"
+          placeholder="April 04th - April 19th"
+        ></textarea>
+
+        <div class="btnHolidays">
+          <button class="btnsubmit" onclick="storeNote()">Submit</button>
+          <button class="btnDisplay" onclick="displayNotes()">
+            Display Holidays
+          </button>
+          <button class="btnClear" onclick="clearStorage()">CLEAR</button>
+        </div>
+      </form>
+
+      <script>
+        //prevent button from doing its usual function of submiting the form
+        const formSubmit = (event) => {
+          event.preventDefault();
+        };
+        const storeNote = () => {
+          document.getElementById("next").innerHTML = "";
+          newNoteName = document.forms["dataForm"]["noteNames"].value;
+          //validation for an empty notes title
+          if (newNoteName === "") {
+            alert("Please enter a name for the note");
+            return;
+          }
+          //validation for an empty notes box
+          newNoteText = document.forms["dataForm"]["noteText"].value;
+          if (newNoteText === "") {
+            alert("Please enter content for the note");
+            return;
+          }
+          //check in length exists in storage
+          if (typeof Storage !== "undefined") {
+            let length = parseInt(localStorage.getItem("length"));
+            //using a JSON replacer to convert an array to a string so the notes seem to be stored like they are in an array
+            if (isNaN(length)) {
+              localStorage.setItem(
+                "noteNamesArray",
+                JSON.stringify([newNoteName])
+              );
+              localStorage.setItem(
+                "noteListArray",
+                JSON.stringify([newNoteText])
+              );
+              //initialising lenth because length is NaN
+              length = 1;
+            } else {
+              let noteNameArray = JSON.parse(
+                localStorage.getItem("noteNamesArray")
+              );
+              let noteListArray = JSON.parse(
+                localStorage.getItem("noteListArray")
+              );
+
+              localStorage.setItem(
+                "noteNamesArray",
+                JSON.stringify([noteNameArray, newNoteName])
+              );
+
+              localStorage.setItem(
+                "noteListArray",
+                JSON.stringify([noteListArray, newNoteText])
+              );
+
+              //Increase Length by 1 each time
+              length += 1;
+            }
+            // New length stored
+            localStorage.setItem("length", length);
+          } else {
+            alert("Not allowed to add to storage");
+          }
+          document.forms["dataForm"]["noteNames"].value = "";
+          document.forms["dataForm"]["noteText"].value = "";
+        };
+        const displayNotes = () => {
+          document.getElementById("notesArea").innerHTML = "";
+          document.getElementById("notesTable").innerHTML = "";
+          let names = JSON.parse(localStorage.getItem("noteNamesArray"));
+          let notes = JSON.parse(localStorage.getItem("noteListArray"));
+          var lineout;
+          var length = parseInt(localStorage.getItem("length"));
+
+          if (names !== null && notes !== null) {
+            if (length !== "undefined") {
+              for (i = 0; i < length; i++) {
+                var lineout = names[i] + ":  " + notes[i];
+                var node1 = document.createElement("TR");
+                var textnode1 = document.createTextNode(lineout);
+                node1.appendChild(textnode1);
+                document.getElementById("notesTable").appendChild(node1);
+              }
+              if (length >= 0) {
+                document.getElementById("notesTable").style.visibility =
+                  "visible";
+              }
+            }
+          }
+        };
+
+        //Clearing all data from local storage
+        const clearStorage = () => {
+          localStorage.removeItem("length");
+          localStorage.removeItem("noteNamesArray");
+          localStorage.removeItem("noteListArray");
+
+          document.getElementById("notesTable").innerHTML = "";
+        };
+      </script>
+
+      <br />
+      <h2 id="notesArea"></h2>
+      <br />
+
+      <table class="notesTable1" id="notesTable">
+        <p class="notetitle">My Notes</p>
+        <tr>
+          <th class="tableHead1" id="tableHead">
+            Your Holiday Will Be Stored Here
+          </th>
+        </tr>
+        <tr>
+          <td></td>
+        </tr>
+      </table>
+
+      <p></p>
+      <h3 id="next"></h3>
+    </div>
+    <footer>
+      <a onclick="openwindow()">
+        <img class="logo" src="Logo.png" alt="logo"
+      /></a>
+      <script>
+        const openwindow = () => {
+          window.open("https://www.west-lothian.ac.uk/");
+        };
+      </script>
+    </footer>
+  </body>
+</html>
